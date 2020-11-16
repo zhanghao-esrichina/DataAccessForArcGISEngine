@@ -1,0 +1,17 @@
+D:\Code\C#\DownloadSln\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+D:\Code\C#\DownloadSln\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+D:\Code\C#\DownloadSln\WindowsFormsApplication1\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\Code\C#\DownloadSln\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.Form1.resources
+D:\Code\C#\DownloadSln\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.Properties.Resources.resources
+D:\Code\C#\DownloadSln\WindowsFormsApplication1\obj\x86\Debug\GenerateResource.read.1.tlog
+D:\Code\C#\DownloadSln\WindowsFormsApplication1\obj\x86\Debug\GenerateResource.write.1.tlog
+D:\Code\C#\DownloadSln\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.exe
+D:\Code\C#\DownloadSln\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.pdb
+E:\Develop\DotNET\Code\C#\DownloadSln\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.exe
+E:\Develop\DotNET\Code\C#\DownloadSln\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.pdb
+E:\Develop\DotNET\Code\C#\DownloadSln\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+E:\Develop\DotNET\Code\C#\DownloadSln\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+E:\Develop\DotNET\Code\C#\DownloadSln\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
+E:\Develop\DotNET\Code\C#\DownloadSln\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.Form1.resources
+E:\Develop\DotNET\Code\C#\DownloadSln\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.Properties.Resources.resources
+E:\Develop\DotNET\Code\C#\DownloadSln\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache

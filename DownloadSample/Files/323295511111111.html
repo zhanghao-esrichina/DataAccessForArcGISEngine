@@ -1,0 +1,482 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>C#编程总结（四）多线程应用 - 停留的风 - 博客园</title>
+<link type="text/css" rel="stylesheet" href="/bundles/blog-common.css?v=gdNkSiQMyBMkpTeO1ex9qW-60UbMszQItnCUpBAT3LQ1"/>
+<link id="MainCss" type="text/css" rel="stylesheet" href="http://common.cnblogs.com/Skins/KJC/style.css?id=20140110"/>
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/yank/rss"/>
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/yank/rsd.xml"/>
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/yank/wlwmanifest.xml"/>
+<script src="http://common.cnblogs.com/script/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'yank', cb_enable_mathjax=false;</script>
+<script src="/bundles/blog-common.js?v=VS7ve6HfGvxtuwYyB4SWqTrYP6ZukEwxrePhJmRhqZc1" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<table class="Framework" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<td colspan="3">
+			
+<div id="top">
+<table cellpadding="10" cellspacing="0">
+	<tr>
+		<td nowrap>
+			<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/yank/">停留的风</a></h1>
+			
+		</td>
+	</tr>
+</table>
+</div>
+<div id="sub">
+	<div id="sub-right">
+<div class="BlogStats">posts - 183, comments - 791, trackbacks - 5, articles - 25</div></div>
+	
+&nbsp;
+&nbsp;::
+<a id="Header1_MyLinks1_MyHomeLink" href="http://www.cnblogs.com/yank/">首页</a>&nbsp;::
+<a id="Header1_MyLinks1_NewPostLink" rel="nofollow" href="http://www.cnblogs.com/yank/admin/EditPosts.aspx?opt=1">新随笔</a>&nbsp;::
+<a id="Header1_MyLinks1_ContactLink" accesskey="9" rel="nofollow" href="http://space.cnblogs.com/msg/send/%e5%81%9c%e7%95%99%e7%9a%84%e9%a3%8e">联系</a>&nbsp;::
+<a id="Header1_MyLinks1_Syndication" href="http://www.cnblogs.com/yank/rss">订阅</a>
+<a id="Header1_MyLinks1_XMLLink" class="XMLLink" href="http://www.cnblogs.com/yank/rss"><img src="http://www.cnblogs.com/images/xml.gif" alt="订阅" /></a>&nbsp;::
+<a id="Header1_MyLinks1_Admin" rel="nofollow" href="http://www.cnblogs.com/yank/admin/EditPosts.aspx">管理</a>
+
+</div>
+		</td>
+	</tr>
+	<tr>
+		<td class="LeftCell">
+			<div id="leftmenu">
+            	
+		            <div id="blog-calendar" style="display:none"></div><script type="text/javascript">loadBlogDefaultCalendar();</script>
+		            
+<div id=cell>
+<img src="/Skins/KJC/Images/icon-group.jpg" hspace=5 align=left vspace=2><h3>公告</h3>
+<div id=news>
+	<div id="blog-news"></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+</div>
+
+	            
+	            <div id="blog-sidecolumn"></div><script type="text/javascript">loadBlogSideColumn();</script>
+			</div>
+		</td>
+		<td class="MainCell">
+			<div id="main">
+				
+
+	<div class="post">
+		<div class="posthead">
+			<h2>
+				<a id="cb_post_title_url" class="singleposttitle" href="http://www.cnblogs.com/yank/p/3232955.html">C#编程总结（四）多线程应用</a>
+			</h2>
+ 			Posted on <span id="post-date">2013-08-14 16:24</span> <a href='http://www.cnblogs.com/yank/'>停留的风</a> 阅读(<span id="post_view_count">...</span>) 评论(<span id="post_comment_count">...</span>)  <a href ="http://www.cnblogs.com/yank/admin/EditPosts.aspx?postid=3232955" rel="nofollow">编辑</a> <a href="#" onclick="AddToWz(3232955efaultCalendar();</script>
+		            
+<div id=cell>
+<img src="/Skins/KJC/Images/icon-group.jpg" hspace=5 align=left vspace=2><h3>公告</h3>
+<div id=news>
+	<div id="blog-news"></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+</div>
+
+	            
+	            <div id="blog-sidecolumn"></div><script type="text/javascript">loadBlo);return false;">收藏</a>
+			<script type="text/javascript">var allowComments=true,isLogined=false,cb_blogId=26349,cb_entryId=3232955,cb_blogApp=currentBlogApp,cb_blogUserGuid='0e733d0b-63cf-dd11-9e4d-001cf0cd104b',cb_entryCreatedDate='2013/8/14 16:24:00';loadViewCount(cb_entryId);</script>
+			
+		</div>
+		<div class="postbody"><div id="cnblogs_post_body"><h1>C#编程总结（四）多线程应用</h1>
+<p>&nbsp;多线程应用很广泛，简单总结了一下：</p>
+<p>1）不阻断主线程，实现即时响应，由后台线程完成特定操作<br />2）多个线程，完成同类任务，提高并发性能<br />3）一个任务有多个独立的步骤，多个线程并发执行各子任务，提高任务处理效率</p>
+<p>下面我们通过几个小例子做简单介绍。</p>
+<h2><strong>1、进度条</strong></h2>
+<p><img src="http://images.cnitblog.com/blog/22790/201308/02162001-729782edbd1a44f5a8183e5c8a8ea45e.jpg" alt="" /></p>
+<p>分析：页面动态刷新，主页面正常可操作。我们通过后台线程来实现进度条。</p>
+<p>首先，创建Winform页面，然后拖入进度条控件，将页面的代码改为以下代码即可。</p>
+<p><span style="color: #ff9900;">这里只是个简单的例子，其实我们可以做的更好，将进度条封装为一个自定义控件，设计为一个通用好看的进度条。这里只讲技术和方向，大家可以自己研究研究。</span></p>
+<p>相关代码：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">using</span><span style="color: #000000;"> System;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Collections.Generic;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.ComponentModel;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Data;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Drawing;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Linq;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Text;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Windows.Forms;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Threading;
+
+</span><span style="color: #0000ff;">namespace</span><span style="color: #000000;"> ProgressBarSample
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">定义委托，异步调用</span>
+    <span style="color: #0000ff;">delegate</span> <span style="color: #0000ff;">void</span> ShowProgressDelegate(<span style="color: #0000ff;">int</span> totalStep, <span style="color: #0000ff;">int</span><span style="color: #000000;"> currentStep);
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">partial</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Form1 : Form
+    {
+        </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Form1()
+        {
+            InitializeComponent();
+        }
+        </span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;summary&gt;</span>
+        <span style="color: #808080;">///</span> 
+        <span style="color: #808080;">///</span> <span style="color: #808080;">&lt;/summary&gt;</span>
+        <span style="color: #808080;">///</span> <span style="color: #808080;">&lt;param name="sender"&gt;&lt;/param&gt;</span>
+        <span style="color: #808080;">///</span> <span style="color: #808080;">&lt;param name="e"&gt;&lt;/param&gt;</span>
+        <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span> btnStart_Click(<span style="color: #0000ff;">object</span><span style="color: #000000;"> sender, EventArgs e)
+        {
+            ParameterizedThreadStart start </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> ParameterizedThreadStart(SetProgress);
+            Thread progressThread </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Thread(start);
+            progressThread.IsBackground </span>= <span style="color: #0000ff;">true</span>;<span style="color: #008000;">//</span><span style="color: #008000;">标记为后台进程，在窗口退出时，正常退出</span>
+<span style="color: #000000;">            progressThread.Start();
+        }
+        </span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;summary&gt;</span>
+        <span style="color: #808080;">///</span><span style="color: #008000;"> 设置当前进度
+        </span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;/summary&gt;</span>
+        <span style="color: #808080;">///</span> <span style="color: #808080;">&lt;param name="state"&gt;&lt;/param&gt;</span>
+        <span style="color: #0000ff;">void</span> SetProgress(<span style="color: #0000ff;">object</span><span style="color: #000000;"> state)
+        {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt;= <span style="color: #800080;">100</span>; i++<span style="color: #000000;">)
+            {
+                Thread.Sleep(</span><span style="color: #800080;">200</span><span style="color: #000000;">);
+                </span><span style="color: #0000ff;">object</span>[] objs = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">object</span>[] { <span style="color: #800080;">100</span><span style="color: #000000;">, i };
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">异步调用</span>
+                <span style="color: #0000ff;">this</span>.Invoke(<span style="color: #0000ff;">new</span><span style="color: #000000;"> ShowProgressDelegate(ShowProgress), objs);
+            }
+        }
+        </span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;summary&gt;</span>
+        <span style="color: #808080;">///</span><span style="color: #008000;"> 刷新进度条
+        </span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;/summary&gt;</span>
+        <span style="color: #808080;">///</span> <span style="color: #808080;">&lt;param name="totalStep"&gt;&lt;/param&gt;</span>
+        <span style="color: #808080;">///</span> <span style="color: #808080;">&lt;param name="currentStep"&gt;&lt;/param&gt;</span>
+        <span style="color: #0000ff;">void</span> ShowProgress(<span style="color: #0000ff;">int</span> totalStep, <span style="color: #0000ff;">int</span><span style="color: #000000;"> currentStep)
+        {
+            </span><span style="color: #0000ff;">this</span>.progressBar1.Maximum =<span style="color: #000000;"> totalStep;
+            </span><span style="color: #0000ff;">this</span>.progressBar1.Value =<span style="color: #000000;"> currentStep;
+
+            </span><span style="color: #0000ff;">this</span>.lbCurrent.Text = <span style="color: #0000ff;">this</span>.progressBar1.Value * <span style="color: #800080;">100</span> / progressBar1.Maximum + <span style="color: #800000;">"</span><span style="color: #800000;">%</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        }
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2><strong>2、网络扒虫</strong></h2>
+<p>经常遇到这样的场景，通过扒虫程序，去互联网获取所需资源。其实搜索引擎的一个重要组成部分就是扒虫。但是，往往扒虫程序比较费时，这时就需要多线程帮忙。</p>
+<p>这里写一个简单的扒虫程序，说明下原理。</p>
+<p>案例:通过网络连接，获取网络相关信息。</p>
+<p>扒虫对象：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">using</span><span style="color: #000000;"> System;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Net;
+
+</span><span style="color: #0000ff;">namespace</span><span style="color: #000000;"> Reptile
+{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> NetReptile
+    {
+        </span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;summary&gt;</span>
+        <span style="color: #808080;">///</span> 
+        <span style="color: #808080;">///</span> <span style="color: #808080;">&lt;/summary&gt;</span>
+        <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">string</span> Url { <span style="color: #0000ff;">get</span>; <span style="color: #0000ff;">set</span><span style="color: #000000;">; }
+        </sp过网络连接，获取网络相关信息。</p>
+<p>扒虫对象：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">using</span><span style="color: #000000;"> System;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Net;
+
+</span><span style="color: #0000ffan><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;summary&gt;</span>
+        <span style="color: #808080;">///</span> 
+        <span style="color: #808080;">///</span> <span style="color: #808080;">&lt;/summary&gt;</span>
+        <span style="color: #808080;">///</span> <span style="color: #808080;">&lt;param name="url"&gt;&lt;/param&gt;</span>
+        <span style="color: #0000ff;">public</span> NetReptile(<span style="color: #0000ff;">string</span><span style="color: #000000;"> url)
+        {
+            </span><span style="color: #0000ff;">this</span>.Url =<span style="color: #000000;"> url;
+        }
+
+        </span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;summary&gt;</span>
+        <span style="color: #808080;">///</span> 
+        <span style="color: #808080;">///</span> <span style="color: #808080;">&lt;/summary&gt;</span>
+        <span style="color: #808080;">///</span> <span style="color: #808080;">&lt;returns&gt;&lt;/returns&gt;</span>
+        <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">string</span><span style="color: #000000;"> GetContent()
+        {
+            WebClient client </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> WebClient();
+            </span><span style="color: #0000ff;">return</span> client.DownloadString(<span style="color: #0000ff;">new</span> Uri(<span style="color: #0000ff;">this</span><span style="color: #000000;">.Url));
+        }
+    }
+}</span></pre>
+</div>
+<p>抓到内容后，需要解析，提取我们需要的内容，这里以抓取网页的标题为例。解析器代码：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">using</span><span style="color: #000000;"> System;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Text;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Text.RegularExpressions;
+
+</span><span style="color: #0000ff;">namespace</span><span style="color: #000000;"> Reptile
+{
+    </span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;summary&gt;</span>
+    <span style="color: #808080;">///</span><span style="color: #008000;"> HTML解析器
+    </span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;/summary&gt;</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> HtmlAnalyzer
+    {
+        </span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;summary&gt;</span>
+        <span style="color: #808080;">///</span><span style="color: #008000;"> 构造函数
+        </span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;/summary&gt;</span>
+        <span style="color: #0000ff;">public</span><span style="color: #000000;"> HtmlAnalyzer()
+        { }
+        </span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;summary&gt;</span>
+        <span style="color: #808080;">///</span><span style="color: #008000;"> 获取标题
+        </span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;/summary&gt;</span>
+        <span style="color: #808080;">///</span> <span style="color: #808080;">&lt;param name="html"&gt;&lt;/param&gt;</span>
+        <span style="color: #808080;">///</span> <spalic</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> HtmlAnalyzer
+    {
+        </span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;summary&gt;</span>
+        <span style="color: #808080;">///</span><span style="color: #008000;"> 构造函数
+        </span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;/summary&gt;</span>
+        <span style="color: #0000ff;">public</span><span style="color: #000000;"> HtmlAnalyzer()
+        { }
+        </span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;summn style="color: #808080;">&lt;returns&gt;&lt;/returns&gt;</span>
+        <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">string</span> GetTitle(<span style="color: #0000ff;">string</span><span style="color: #000000;"> html)
+        {
+            Regex regext </span>= <span style="color: #0000ff;">new</span> Regex(<span style="color: #800000;">"</span><span style="color: #800000;">(?&lt;=&lt;title&gt;).*?(?=&lt;/title&gt;)</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+            Match m </span>=<span style="color: #000000;"> regext.Match(html);
+            </span><span style="color: #0000ff;">if</span> (m != <span style="color: #0000ff;">null</span><span style="color: #000000;">)
+            {
+                </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> m.ToString();                
+            }
+
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        }
+
+    }
+}</span></pre>
+</div>
+<p><span style="line-height: 1.5;">使用多线程创建扒虫，抓取数据：</span></p>
+<div class="cnblogs_code">
+<pre>   <span style="color: #808080;">///</span> <span style="color: #808080;">&lt;summary&gt;</span>
+        <span style="color: #808080;">///</span><span style="color: #008000;"> 多线程处理
+        </span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;/summary&gt;</span>
+        <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> MultiThread()
+        {
+            </span><span style="color: #0000ff;">string</span> urls =<span style="color: #000000;"> tbUrl.Text;
+            </span><span style="color: #0000ff;">string</span>[] separater = { <span style="color: #800000;">"</span><span style="color: #800000;">\r\n</span><span style="color: #800000;">"</span><span style="color: #000000;"> };
+            </span><span style="color: #0000ff;">string</span>[] urlList =<span style="color: #000000;"> urls.Split(separater, StringSplitOptions.RemoveEmptyEntries);
+            </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span><span style="color: #000000;">;
+
+            </span><span style="color: #0000ff;">foreach</span> (<span style="color: #0000ff;">var</span> url <span style="color: #0000ff;">in</span><span style="color: #000000;"> urlList)
+            {
+                Thread thread </span>= <span style="color: #0000ff;">new</span> Thread(<span style="color: #0000ff;">new</span><span style="color: #000000;"> ParameterizedThreadStart(Snap));
+                thread.Name </span>= <span style="color: #800000;">"</span><span style="color: #800000;">Thread</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> i.ToString();
+                thread.Start(url);
+                i</span>++<span style="color: #000000;">;
+            }
+
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">RefreshData();</span>
+<span style="color: #000000;">        }
+        </span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;summary&gt;</span>
+        <span style="color: #808080;">///</span><span style="color: #008000;"> 抓取数据
+        </span><span style="color: #808080;">///</span> <span style="color: #808olor: #0000ff;">in</span><span style="color: #000000;"> urlList)
+            {
+                Thread thread </span>= <span style="color: #0000ff;">new</span> Thread(<span style="color: #0000ff;">new</span><span style="color: #000000;"> ParameterizedThreadStart(Snap));
+                thread.Name </span>= <span style="color: #800000;">"</span><span style="color: #800000;">Thread</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> i.ToString();
+                thread.Start(url);
+                i</span>++<span style="color: #000000;">;
+            }
+
+            </span><span style="col080;">&lt;/summary&gt;</span>
+        <span style="color: #808080;">///</span> <span style="color: #808080;">&lt;param name="state"&gt;&lt;/param&gt;</span>
+        <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span> Snap(<span style="color: #0000ff;">object</span><span style="color: #000000;"> state)
+        {
+            </span><span style="color: #0000ff;">string</span> url = state <span style="color: #0000ff;">as</span> <span style="color: #0000ff;">string</span><span style="color: #000000;">;
+            NetReptile reptile </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> NetReptile(url);
+            </span><span style="color: #0000ff;">string</span> html =<span style="color: #000000;"> reptile.GetContent();
+
+            </span><span style="color: #0000ff;">if</span> (!<span style="color: #0000ff;">string</span><span style="color: #000000;">.IsNullOrEmpty(html))
+            {
+                HtmlAnalyzer analyzer </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> HtmlAnalyzer();
+                </span><span style="color: #0000ff;">string</span> title =<span style="color: #000000;"> analyzer.GetTitle(html);
+                Thread.Sleep(</span><span style="color: #800080;">2000</span><span style="color: #000000;">);
+                </span><span style="color: #0000ff;">this</span>.Invoke(<span style="color: #0000ff;">new</span> AddItemDelegate(<span style="color: #0000ff;">this</span><span style="color: #000000;">.AddItem),title);                
+            }
+        }
+        </span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;summary&gt;</span>
+        <span style="color: #808080;">///</span> 
+        <span style="color: #808080;">///</span> <span style="color: #808080;">&lt;/summary&gt;</span>
+        <span style="color: #808080;">///</span> <span style="color: #808080;">&lt;param name="item"&gt;&lt;/param&gt;</span>
+        <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span> AddItem(<span style="color: #0000ff;">string</span><span style="color: #000000;"> item)
+        {
+            </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.listData.Items.Add(item);
+        }</span></pre>
+</div>
+<p><span style="line-height: 1.5;">全部源码：</span><a style="line-height: 1.5;" href="http://files.cnblogs.com/yank/Reptile.rar">http://files.cnblogs.com/yank/Reptile.rar</a></p>
+<p>&nbsp;</p>
+<h2><strong style="line-height: 1.5;">其他：</strong></h2>
+<p>多线程应用还有很多，比如：文件上传和下载、异步加载、Web请求、压力测试、流水线技术等等。后续我们还会将一些典型案例更新在这里。</p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="blog_post_info">
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"></div>
+</div>
+
+</div>
+	</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" id="lnk_RefreshComments" onclick="return RefreshCommentList();">刷新评论</a><a href="#" onclick="return RefreshPage();">刷新页面</a><a href="#top">返回顶部</a></div>
+<div id="comment_form_container"></div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="site_nav_under"><a href="http://www.cnblogs.com/" target="_blank" title="程序员的网上家园">博客园首页</a><a href="http://q.cnblogs.com/" target="_blank" title="程序员问答社区">博问</a><a href="http://news.cnblogs.com/" target="_blank" title="IT新闻">新闻</a><a href="http://home.cnblogs.com/ing/" target="_blank">闪存</a><a href="http://job.cnblogs.com/" target="_blank">程序员招聘</a><a href="http://kb.cnblogs.com/" target="_blank">知识库</a></div>
+<div id="ad_under_post_holder"></div>
+<script type="text/javascript">
+var enableGoogleAd = true;
+var googletag = googletag || {};
+googletag.cmd = googletag.cmd || [];
+fixPostBodyFormat();
+loadAdUnderPost();
+</script>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+loadBlogSignature();
+LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+</script>
+<script type="text/javascript">
+    $.ajax({ url: 'http://counter.cnblogs.com/blog/post/' + cb_entryId, type: 'get', dataType: 'script', cache: true });
+</script>
+</div>
+
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" class="FooterCell">
+			
+<p id="footer">
+	Powered by: 
+	<br />
+	
+	<a id="Footer1_Hyperlink3" NAME="Hyperlink1" href="http://www.cnblogs.com/"><font face="Verdana">博客园</font></a>
+	<br />
+	Copyright &copy; 停留的风
+</p>
+
+		</td>
+	</tr>
+</table>
+
+</body>
+</html>
+r"></div>
+<script type="text/javascript">
+var enableGoogleAd = true;
+var googletag = googletag || {};
+googletag.cmd = googletag.cmd || [];
+fixPostBodyFormat();
+loadAdUnderPost();
+</script>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+loadBlogSignature();
+LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+</script>
+<script type="text/javascript">
+    $.ajax({ url: 'http://counter.cnblogs.com/blog/post/' + cb_entryId, type: 'get', dataType: 'script', cache: true });
+</script>
+</div>
+
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" class="FooterCell">
+			
+<p id="footer">
+	Powered by: 
+	<br />
+	
+	<a id="Footer1_Hyperlink3" NAME="Hyperlink1" href="http://www.cnblogs.com/"><font f/a>
+	<br />
+	Copyright &copy; 停留的风
+</p>
+
+		</td>
+	</tr>
+</table>
+
+</body>
+</html>
+r"></div>
+<script type="text/javascript">
+var enableGoogleAd = true;
+var googletag = googletag || {};
+googletag.cmd = googletag.cmd || [];
+fixPostBodyFormat();
+loadAdUnderPost();
+</script>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+loadBlogSignature();
+LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+</script>
+<script type="text/javascript">
+    $.ajax({ url: 'http://counter.cnblogs.com/blog/post/' + cb_entryId, type: 'get', dataType: 'script', cache: true });
+</script>
+</div>
+
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" class="FooterCell">
+			
+<p id="footer">
+	Powered by: 
+	<br />
+	
+	<a id="Footer1_Hyperlink3" NAME="Hyperlink1" href="http://www.cnblogs.com/"><font face="Verdana">博客园</font><ature();
+LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+</script>
+<script type="text/javascript">
+    $.ajax({ url: 'http://counter.cnblogs.com/blog/post/' + cb_entryId, type: 'get', dataType: 'script', cache: true });
+</script>
+</div>
+
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" class="FooterCell">
+			
+<p id="footer">
+	Powered by: 
+	<br />
+	
+	<a id="Footer1_Hyperlink3" NAME="Hyperlink1" href="http://www.cnblogs.com/"><font face="Verdana">博客园</font></a>
+	<br />
+	Copyright &copy; 停留的风
+</p>
+
+		</td>
+	</tr>
+</table>
+
+</body>
+</html>
+r"></div>
+<script type="text/javascript">
+var enableGoogleAd = true;
+var googletag = googletag || {};
+googletag.cmd = googletag.cmd || [];
+fixPostBodyFormat();
+loadAdUnderPost();
+</script>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+loadBlogSign

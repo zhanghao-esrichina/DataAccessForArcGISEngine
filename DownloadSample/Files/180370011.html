@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>HTTP Range - RockyLOMO - 博客园</title>
+<link type="text/css" rel="stylesheet" href="/bundles/blog-common.css?v=gdNkSiQMyBMkpTeO1ex9qW-60UbMszQItnCUpBAT3LQ1"/>
+<link id="MainCss" type="text/css" rel="stylesheet" href="http://common.cnblogs.com/Skins/CornflowerBlue/style.css?id=20140110"/>
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/Googler/rss"/>
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/Googler/rsd.xml"/>
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/Googler/wlwmanifest.xml"/>
+<script src="http://common.cnblogs.com/script/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'Googler', cb_enable_mathjax=false;</script>
+<script src="/bundles/blog-common.js?v=VS7ve6HfGvxtuwYyB4SWqTrYP6ZukEwxrePhJmRhqZc1" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<div id="top">
+
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/Googler/">Googler</a></h1>
+<p id="tagline">专注Http(s)/DNS Tunnel、Redis + Hadoop & Distributed crawler.</p>
+</div>
+<div id="main">
+	
+
+	<div class="post">
+	
+		<h2>
+			<a id="cb_post_title_url" href="http://www.cnblogs.com/Googler/archive/2010/08/19/1803700.html">HTTP Range</a>
+		</h2>
+		<div class="postbody"><div id="cnblogs_post_body"><p>Range，是在 HTTP/1.1（<a href="http://www.w3.org/Protocols/rfc2616/rfc2616.html">http://www.w3.org/Protocols/rfc2616/rfc2616.html</a>）里新增的一个 header field，也是现在众多号称多线程下载工具（如 FlashGet、迅雷等）实现多线程下载的核心所在。</p>
+<p>Range 的规范定义如下：<br />ranges-specifier = byte-ranges-specifier<br />byte-ranges-specifier = bytes-unit &ldquo;=&rdquo; byte-range-set<br />byte-range-set = 1#( byte-range-spec | suffix-byte-range-spec )<br />byte-range-spec = first-byte-pos &ldquo;-&rdquo; [last-byte-pos]<br />first-byte-pos = 1*DIGIT<br />last-byte-pos = 1*DIGIT<br />（RFC2616 里充斥着这种形式的定义，一开始觉得挺乱，后来习惯了就发现其实挺科学，挺好理解的:)）</p>
+<p>值得注意的就是 byte-range-set 是一个 byte-range 的集合，所以在实际请求中完全可能会出现如下这种形式：<br />Range: bytes=123-567,789-<br />这个数据区间是个闭合区间，起始值是 0，所以&ldquo;Range: bytes=0-1&rdquo;这样一个请求实际上是在请求开头的 2 个字节。</p>
+<p>byte-range-spec 里的 last-byte-pos 可以省略，代表从 first-byte-pos 一直请求到结束位置。其实 first-byte-pos 也是可以省略的，只不过就不叫 byte-range-spec 了，而是叫 suffix-byte-range-spec，规范如下：<br />suffix-byte-range-spec = &ldquo;-&rdquo; suffix-length<br />suffix-length = 1*DIGIT<br />比如&ldquo;Range: bytes=-200&rdquo;，它不是表示请求文件开始位置的 201 个字节，而是表示要请求文件结尾处的 200 个字节。</p>
+<p>如果 byte-range-spec 的 last-byte-pos 小于 first-byte-pos，那么这个 Range 请求就是无效请求，server 需要忽略这个 Range 请求，然后回应一个 200 OK，把整个文件发给 client。<br />如果 byte-range-spec 里的 first-byte-pos 大于文件长度，或者 suffix-byte-range-spec 里的 suffix-length 等于 0，那么这个 Range 请求被认为是不能满足的，server 需要回应一个 416 Requested range not satisfiable。</p>
+<p>server 除了要能理解 R个字节。</p>
+<p>byte-range-spec 里的 last-byte-pos 可以省略，代表从 first-byte-pos 一直请求到结束位置。其实 first-byte-pos 也是可以省略的，只不过就不叫 byte-range-spec 了，而是叫 suffix-byte-range-spec，规范如下：<br />suffix-byte-range-spec = &ldquo;-&rdquo; suffix-length<br />suffix-length = 1*DIGIT<br />比�

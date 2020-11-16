@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>HTTP Range - RockyLOMO - 博客园</title>
+<link type="text/css" rel="stylesheet" href="/bundles/blog-common.css?v=gdNkSiQMyBMkpTeO1ex9qW-60UbMszQItnCUpBAT3LQ1"/>
+<link id="MainCss" type="text/css" rel="stylesheet" href="http://common.cnblogs.com/Skins/CornflowerBlue/style.css?id=20140110"/>
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/Googler/rss"/>
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/Googler/rsd.xml"/>
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/Googler/wlwmanifest.xml"/>
+<script src="http://common.cnblogs.com/script/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'Googler', cb_enable_mathjax=false;</script>
+<script src="/bundles/blog-common.js?v=VS7ve6HfGvxtuwYyB4SWqTrYP6ZukEwxrePhJmRhqZc1" type="text/jav">
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>HTTP Range - RockyLOMO - 博客园</title>
+<link type="text/css" rel="stylesheet" href="/bundles/blog-common.css?v=gdNkSiQMyBMkpTeO1ex9qW-60UbMszQItnCUpBAT3LQ1"/>
+<link id="MainCss" type="text/css" rel="stylesheet" href="http://common.cnblogs.com/Skins/CornflowerBlue/style.css?id=20140110"/>
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/Googler/rss"/>
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/Googler/rsd.xml"/>
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/Googler/wlwmanifest.xml"/>
+<script src="http://common.cnblogs.com/script/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'Googler', cb_enable_mathjax=false;</script>
+<script src="/bundles/blog-common.js?vascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<div id="top">
+
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/Googler/">Googler</a></h1>
+<p id="tagline">专注Http(s)/DNS Tunnel、Redis + Hadoop & Distributed crawler.</p>
+</div>
+<div id="main">
+	
+
+	<div class="post">
+	
+		<h2>
+			<a id="cb_post_title_url" href="http://www.cnblogs.com/Googler/archive/2010/08/19/1803700.html">HTTP Range</a>
+		</h2>
+		<div class="postbody"><div id="cnblogs_post_body"><p>Range，是在 HTTP/1.1（<a href="http://www.w3.org/Protocols/rfc2616/rfc2616.html">http://www.w3.org/Protocols/rfc2616/rfc2616.html</a>）里新增的一个 header field，也是现在众多号称多线程下载工具（如 FlashGet、迅雷等）实现多线程下载的核心所在。</p>
+<p>Range 的规范定义如下：<br />ranges-specifier = byte-ranges-specifier<br />byte-ranges-specifier = bytes-unit &ldquo;=&rdquo; byte-range-set<br />byte-range-set = 1#( byte-range-spec | suffix-byte-range-spec )<br />byte-range-spec = first-byte-pos &ldquo;-&rdquo; [last-byte-pos]<br />first-byte-pos = 1*DIGIT<br />last-byte-pos = 1*DIGIT<br />（RFC2616 里充斥着这种形式的定义，一开始觉得挺乱，后来习惯了就发现其实挺科学，挺好理解的:)）</p>
+<p>值得注意的就是 byte-range-set 是一个 byte-range 的集合，所以在实际请求中完全可能会出现如下这种形式：<br />Range: bytes=123-567,789-<br />这个数据区间是个闭合区间，起始值是 0，所以&ldquo;Range: bytes=0-1&rdquo;这样一个请求实际上是在请求开头的 2 个字节。</p>
+<p>byte-range-spec 里的 last-byte-pos 可以省略，代表从 first-byte-pos 一直请求到结束位置。其实 first-byte-pos 也是可以省略的，只不过就不叫 byte-range-spec 了，而是叫 suffix-byte-range-spec，规范如下：<br />suffix-byte-range-spec = &ldquo;-&rdquo; suffix-length<br />suffix-length = 1*DIGIT<br />比如&ldquo;Range: bytes=-200&rdquo;，它不是表示请求文件开始位置的 201 个字节，而是表示要请求文件结尾处的 200 个字节。</p>
+<p>如果 byte-range-spec 的 last-byte-pos 小于 first-byte-pos，那么这个 Range 请求就是无效请求，server 需要忽略这个 Range 请求，然后回应一个 200 OK，把整个文件发给 client。<br />如果 byte-range-spec 里的 first-byte-pos 大于文件长度，或者 suffix-byte-range-spec 里的 suffix-length 等于 0，那么这个 Range 请求被认为是不能满足的，server 需要回应一个 416 Requested range not satisfiable。</p>
+<p>server 除了要能理解 Range 请求之外，在回应 client 时还要使用 Content-Range 来告诉 client 他到底发送了多少数据，Content-Range 的规范定义如下：<br />Content-Range = &ldquo;Content-Range&rdquo; &ldquo;:&rdquo; content-range-spec<br />content-range-spec = byte-content-range-spec<br />byte-content-range-spec = bytes-unit SP byte-range-resp-spec &ldquo;/&rdquo; ( instance-length | &ldquo;*&rdquo; )<br />byte-range-resp-spec = (first-byte-pos &ldquo;-&rdquo; last-byte-pos) | &ldquo;*&rdquo;<br />instance-length = 1*DIGIT</p>
+<p>详尽的细枝末节就不在这里记述了，举个例子说明一下，比如某文件的大小是 1000 字节，client 请求这个文件时用了 &ldquo;Range: bytes=0-500&rdquo;，那么 server 应该把这个文件开头的 501 个字节发回给 client，同时回应头要有如下内容：<br />Content-Range: bytes 0-500/1000</p>
+<p>Range 请求的一些注意事项：<br />1) 不支持 Range 请求的 server 要用&ldquo;Accept-Ranges: none&rdquo;对 client 表明心意；server 也可以主动告诉 client &ldquo;Accept-Ranges: bytes&rdquo;，但是 client 也可以在没有收到这个指示的前提下向 server 发 Range 请求。<br />2) byte-range-set 中的区间可以是&ldquo;有洞&rdquo;的，也可以是部分重叠的<br />3) 单区间的 byte-range-set 正常回应就可以了，但是多区间 byte-range-set 需要 server 使用 multipart/byterange 来回应</p>
+<p>Range头域&nbsp;&nbsp;<br />　　Range头域可以请求实体的一个或者多个子范围。例如，&nbsp;&nbsp;<br />　　表示头500个字节：bytes=0-499&nbsp;&nbsp;<br />　　表示第二个500字节：bytes=500-999&nbsp;&nbsp;<br />〿�个文件时用了 &ldquo;Range: bytes=0-500&rdquo;，那么 server 应该把这个文件开头的 501 个字节发回给 client，同时回应头要有如下内容：<br />Content-Range: bytes 0-500/1000</p>
+<p>Range 请求的一些注意事项：<br />1) 不支持 Range 请求的 server 要用&ldquo;Accept-Ranges: none&rdquo;对 client 表明心意；server 也可以主动告诉 client &ldquo;Accept-Ranges: bytes&rdquo;，但是 client 也可以在没有收到这个指示的前提下向 server 发 Range 请求。<br />2) byte-range-set 中的区间可以是&ldquo;有洞&rdquo;的，也可以是部分重叠的<br />3) 单区间的 byte-range-set 正常回应就可以了，但是多区间 byte-range-set 需要 server 使用 multipart/byterange 来回应</p>
+<p>R�　表示最后500个字节：bytes=-500&nbsp;&nbsp;<br />　　表示500字节以后的范围：bytes=500-&nbsp;&nbsp;<br />　　第一个和最后一个字节：bytes=0-0,-1&nbsp;&nbsp;<br />　　同时指定几个范围：bytes=500-600,601-999&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="blog_post_info">
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"></div>
+</div>
+
+</div>
+		<p class="postfoot">
+			posted on <span id="post-date">2010-08-19 16:58</span> <a href='http://www.cnblogs.com/Googler/'>RockyLOMO</a> 阅读(<span id="post_view_count">...</span>) 评论(<span id="post_comment_count">...</span>)  <a href ="http://www.cnblogs.com/Googler/admin/EditPosts.aspx?postid=1803700" rel="nofollow">编辑</a> <a href="#" onclick="AddToWz(1803700);return false;">收藏</a>
+		</p>
+	</div>
+	<script type="text/javascript">var allowComments=true,isLogined=false,cb_blogId=71506,cb_entryId=1803700,cb_blogApp=currentBlogApp,cb_blogUserGuid='9c3219b1-0012-df11-ba8f-001cf0cd104b',cb_entryCreatedDate='2010/8/19 16:58:00';loadViewCount(cb_entryId);</script>
+	
+<a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" id="lnk_RefreshComments" onclick="return RefreshCommentList();">刷新评论</a><a href="#" onclick="return RefreshPage();">刷新页面</a><a href="#top">返回顶部</a></div>
+<div id="comment_form_container"></div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="site_nav_under"><a href="http://www.cnblogs.com/" target="_blank" title="程序员的网上家园">博客园首页</a><a href="http://q.cnblogs.com/" target="_blank" title="程序员问答社区">博问</a><a href="http://news.cnblogs.com/" target="_blank" title="IT新闻">新闻</a><a href="http://home.cnblogs.com/ing/" target="_blank">闪存</a><a href="http://job.cnblogs.com/" target="_blank">程序员招聘</a><a href="http://kb.cnblogs.com/" target="_blank">知识库</a></div>
+<div id="ad_under_post_holder"></div>
+<script type="text/javascript">
+var enableGoogleAd = true;
+var googletag = googletag || {};
+googletag.cmd = googletag.cmd || [];
+fixPostBodyFormat();
+loadAdUnderPost();
+</script>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+loadBlogSignature();
+LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+</script>
+<script type="text/javascript">
+    $.ajax({ url: 'http://counter.cnblogs.com/blog/post/' + cb_entryId, type: 'get', dataType: 'script', cache: true });
+</script>
+</div>
+
+</div>
+<div id="rightmenu">
+
+	
+<h3>My Links</h3>
+<ul>
+			<li><a id="MyLinks1_HomeLink" href="http://www.cnblogs.com/">博客园</a></li>
+			<li><a id="MyLinks1_MyHomeLink" href="http://www.cnblogs.com/Googler/">首页</a></li>
+			<li><a id="MyLinks1_NewPostLink" rel="nofollow" href="http://www.cnblogs.com/Googler/admin/EditPosts.aspx?opt=1">新随笔</a></li>
+			<li><a id="MyLinks1_ContactLink" accesskey="9" rel="nofollow" href="http://space.cnblogs.com/msg/send/RockyLOMO">联系</a></li>
+			<li><a id="MyLinks1_Syndication" href="http://www.cnblogs.com/Googler/rss">订阅</a> <a id="MyLinks1_XMLLink" href="http://www.cnblogs.com/Googler/rss"><img src="http://www.cnblogs.com/images/xml.gif" alt="订阅" /></a>
+			<li><a id="MyLinks1_Admin" rel="nofollow" href="http://www.cnblogs.com/Googler/admin/EditPosts.aspx">管理</a></li>
+</ul>
+	
+<h3>Blog Stats</h3>
+	<ul>
+		<li>随笔 - 136
+		<li>文章 - 0
+		<li>评论 - 16
+		<li>Trackbacks - 0
+	</li>
+</ul>
+	
+<h3>News</h3>
+	<ul>
+	  <li><div id="blog-news"></div><script type="text/javascript">loadBlogNews();</script></li>
+	</ul>
+
+	<div id="blog-sidecolumn"></div><script type="text/javascript">loadBlogSideColumn();</script>
+
+</div>
+
+
+<p id="footer">
+	Powered by: 
+	<br />
+	
+	<a id="Footer1_Hyperlink3" NAME="Hyperlink1" href="http://www.cnblogs.com/"><font face="Verdana">博客园</font></a>
+	<br />
+	Copyright &copy; RockyLOMO
+</p>
+<!--PageEndHtml Block Begin-->
+<a href="http://s.click.taobao.com/t?e=zGU34CA7K%2BPkqB07S4%2FK0CITy7klxxrJ35Nnc0iLIMRuMWxqH%2BV1EzTTOR%2F6rhHHEqzwxuDCnYWtqQ9fejMt9MZ3OqqYs%2BlVkZxznEDGX%2BzqfA%3D%3D">Apple/苹果笔记本 Mac Air MC968CH/A 行货在保 I5 11寸 超级本</a>
+<!--PageEndHtml Block End-->
+</body>
+</html>
+			<li><a id="MyLinks1_Admin" rel="nofollow" href="http://www.cnblogs.com/Googler/admin/EditPosts.aspx">管理</a></li>
+</ul>
+	
+<h3>Blog Stats</h3>
+	<ul>
+		<li>随笔 - 136
+		<li>文章 - 0
+		<li>评论 - 16
+		<li>Trackbacks - 0
+	</li>
+</ul>
+	
+<h3>News</h3>
+	<ul>
+	  <li><div id="blog-news"></div><script type="text
